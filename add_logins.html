@@ -1,0 +1,35 @@
+<!-- 
+    
+INSERT INTO breadmanagers (breadManagerID, emailAddress, password, firstName, lastName) 
+VALUES (1, 'jdoe1@example.com', 'manager', 'John', 'Doe'),
+(2, 'asmith2@example.com', 'manager', 'Alice', 'Smith'),
+(3, 'bjohnson3@example.com', 'manager', 'Bob', 'Johnson');
+
+// Function to add a bread manager with hashed password
+    function add_bread_manager($email, $password, $firstName, $lastName)
+    {
+        $db = Database::getDB();
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $query = 'INSERT INTO breadManagers (emailAddress, password, firstName, lastName)
+                  VALUES (:email, :password, :firstName, :lastName)';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':password', $hash);
+        $statement->bindValue(':firstName', $firstName);
+        $statement->bindValue(':lastName', $lastName);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+    function is_valid_bread_manager($email, $password) {
+        $db = Database::getDB();
+        $query = 'SELECT password FROM breadManagers WHERE emailAddress = :email';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email', $email);
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        $hash = $row['password'];
+        return password_verify($password, $hash);
+    }
+
+-->
